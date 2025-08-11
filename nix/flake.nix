@@ -15,7 +15,7 @@
         rust = pkgs.rust-bin.nightly.latest.complete;
       in {
         packages.default = pkgs.rustPlatform.buildRustPackage {
-          name = "nix-shell-banner";
+          name = "project-banner";
           src = ./..;
           cargoLock = { lockFile = ../Cargo.lock; };
           nativeBuildInputs = [ pkgs.pkg-config ];
