@@ -74,7 +74,7 @@ fn main() {
     let owner_padding = " ".repeat((max_width + 2 * 4) - (owner_value.len() + owner_label.len()));
     let owner_line = format!("{}{}{}", owner_label, owner_padding, owner_value);
 
-    let rows = vec![product_line, code_line, part_line];
+    let rows = vec![product_line, part_line, code_line];
 
     println!("┌{}┐", "─".repeat(max_width + 2));
     println!("│ {} │", banner_text);
