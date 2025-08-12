@@ -16,8 +16,8 @@ project-banner --logo " 🌊 " --owner wallago --tips One --tips Two --product "
 │ Code:                           WL25-PJBN-CL01 │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
 │ 💡 Tips:                                       │
-│    ▶️One                                       │
-│    ▶️Two                                       │
+│    ▶️ One                                      │
+│    ▶️ Two                                      │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
 │ (c)                     Property of 🌊 wallago │
 └────────────────────────────────────────────────┘
