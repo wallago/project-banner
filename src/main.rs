@@ -1,3 +1,5 @@
+use std::default;
+
 use clap::Parser;
 
 #[derive(Parser, Debug)]
@@ -67,18 +69,26 @@ fn main() {
     let code_line = format!("{}{}{}", code_label, code_padding, code_value);
 
     let owner_label = "(c)";
-    let owner_value = format!(
-        "Property of {}{}{}{} {}{}{}",
+    let logo_value = format!(
+        "{}{}{}{} ",
         rev,
         bold,
-        args.logo.unwrap_or_default(),
-        reset,
+        args.logo.clone().unwrap_or_default(),
+        reset
+    );
+    let owner_value = format!(
+        "Property of {}{}{}{}",
+        if args.logo.is_some() {
+            logo_value
+        } else {
+            String::new()
+        },
         bold,
         args.owner.unwrap_or("none".to_string()),
         reset
     );
     let owner_padding = " ".repeat(
-        (max_width + 4 * 5)
+        (max_width + 4 * if args.logo.is_some() { 5 } else { 2 })
             - (unicode_width::UnicodeWidthStr::width(owner_value.as_str()) + owner_label.len()),
     );
     let owner_line = format!("{}{}{}", owner_label, owner_padding, owner_value);
