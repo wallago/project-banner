@@ -13,7 +13,7 @@ struct Args {
     owner: Option<String>,
     #[arg(long)]
     tips: Option<Vec<String>>,
-    #[arg(long, default_value_t = 40)]
+    #[arg(long, default_value_t = 46)]
     size: usize,
     #[arg(long)]
     logo: Option<String>,
