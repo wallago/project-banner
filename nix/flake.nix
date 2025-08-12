@@ -18,13 +18,11 @@
           name = "project-banner";
           src = ./..;
           cargoLock = { lockFile = ../Cargo.lock; };
-          nativeBuildInputs = [ pkgs.pkg-config ];
-          buildInputs = [ pkgs.openssl ];
         };
         devShells = {
           default = pkgs.mkShell {
             nativeBuildInputs = [ pkgs.pkg-config ];
-            buildInputs = with pkgs; [ openssl cargo-udeps ] ++ [ rust ];
+            buildInputs = with pkgs; [ cargo-udeps ] ++ [ rust ];
           };
         };
       });
