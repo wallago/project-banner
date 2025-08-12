@@ -28,10 +28,10 @@ fn main() {
     let max_width = args.size;
 
     let banner_text = format!(
-        "{}{} Banner{}{}",
+        "{}{} Project Banner{}{}",
         rev,
         bold,
-        " ".repeat((max_width + rev.len() + reset.len()) - (15),),
+        " ".repeat((max_width + rev.len() + reset.len()) - (23),),
         reset,
     );
 
@@ -93,11 +93,11 @@ fn main() {
     }
     if let Some(tips) = args.tips {
         println!("├{}┤", "╌".repeat(max_width + 2));
-        println!("│ {}Tips: {}{} │", dim, " ".repeat(max_width - 6), reset);
+        println!("│ 󰌵 {}Tips: {}{} │", dim, " ".repeat(max_width - 8), reset);
         for tip in tips {
             let tip = format!("{}{}{}", dim, tip, reset);
-            let tip_padding = " ".repeat((max_width + dim.len() + reset.len()) - tip.len() - 3);
-            println!("│    {}{} │", tip, tip_padding);
+            let tip_padding = " ".repeat((max_width + dim.len() + reset.len()) - tip.len() - 5);
+            println!("│    󰁕 {}{} │", tip, tip_padding);
         }
     }
     println!("├{}┤", "╌".repeat(max_width + 2));
