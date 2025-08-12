@@ -15,6 +15,8 @@ struct Args {
     tips: Option<Vec<String>>,
     #[arg(long, default_value_t = 40)]
     size: usize,
+    #[arg(long)]
+    logo: Option<String>,
 }
 
 fn main() {
@@ -66,12 +68,19 @@ fn main() {
 
     let owner_label = "(c)";
     let owner_value = format!(
-        "Property of {}{}{}",
+        "Property of {}{}{}{} {}{}{}",
+        rev,
+        bold,
+        args.logo.unwrap_or_default(),
+        reset,
         bold,
         args.owner.unwrap_or("none".to_string()),
         reset
     );
-    let owner_padding = " ".repeat((max_width + 2 * 4) - (owner_value.len() + owner_label.len()));
+    let owner_padding = " ".repeat(
+        (max_width + 4 * 5)
+            - (unicode_width::UnicodeWidthStr::width(owner_value.as_str()) + owner_label.len()),
+    );
     let owner_line = format!("{}{}{}", owner_label, owner_padding, owner_value);
 
     let rows = vec![product_line, part_line, code_line];
