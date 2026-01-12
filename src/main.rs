@@ -1,4 +1,5 @@
 use clap::Parser;
+use crossterm::terminal::size;
 use unicode_width::UnicodeWidthStr;
 
 #[derive(Parser, Debug, Clone)]
@@ -14,7 +15,7 @@ struct Args {
     owner: Option<String>,
     #[arg(long)]
     tips: Option<Vec<String>>,
-    #[arg(long, default_value_t = 46)]
+    #[arg(long, default_value_t = size().unwrap().0.into())]
     size: usize,
     #[arg(long)]
     logo: Option<String>,
@@ -57,6 +58,35 @@ fn padded_line(label: &str, value: &str, max_width: usize) -> String {
     };
 
     format!("{}{}{}", label, padding, value)
+}
+
+fn wrap_text(text: &str, max_width: usize) -> Vec<String> {
+    let mut lines = Vec::new();
+    let mut current_line = String::new();
+    let mut current_width = 0;
+
+    for word in text.split_whitespace() {
+        let word_width = UnicodeWidthStr::width(word);
+
+        if current_width == 0 {
+            current_line = word.to_string();
+            current_width = word_width;
+        } else if current_width + 1 + word_width <= max_width {
+            current_line.push(' ');
+            current_line.push_str(word);
+            current_width += 1 + word_width;
+        } else {
+            lines.push(current_line);
+            current_line = word.to_string();
+            current_width = word_width;
+        }
+    }
+
+    if !current_line.is_empty() {
+        lines.push(current_line);
+    }
+
+    lines
 }
 
 fn banner(max_width: usize, rev: &str, bold: &str, reset: &str) -> String {
@@ -122,13 +152,36 @@ fn owner(max_width: usize, bold: &str, rev: &str, reset: &str, args: Args) -> St
     padded_line(owner_label, &owner_value, max_width)
 }
 
+fn tip_lines(max_width: usize, reset: &str, dim: &str, tip: String) -> Vec<String> {
+    let prefix = "   󰁕 ";
+    let prefix_width = visible_width(prefix);
+    let continuation_prefix = "     "; // same width, no icon
+    let available_width = max_width.saturating_sub(prefix_width);
+
+    let wrapped = wrap_text(&tip, available_width);
+    wrapped
+        .into_iter()
+        .enumerate()
+        .map(|(i, line)| {
+            let p = if i == 0 { prefix } else { continuation_prefix };
+            let text = format!("{}{}{}", dim, line, reset);
+            let line_width = visible_width(p) + visible_width(&line);
+            let padding = " ".repeat(max_width.saturating_sub(line_width));
+            format!("{}{}{}", p, text, padding)
+        })
+        .collect()
+}
+
 fn main() {
     let args = Args::parse();
+    if args.size < 32 {
+        return;
+    }
+    let max_width = args.size - 4;
     let dim = "\x1b[2m"; // ANSI code for dim color
     let reset = "\x1b[0m"; // reset formatting
     let rev = "\x1b[7m"; // revert color
     let bold = "\x1b[1m"; // bold color
-    let max_width = args.size;
 
     let banner = banner(max_width, rev, bold, reset);
     let product = product(max_width, bold, reset, dim, args.clone());
@@ -154,22 +207,10 @@ fn main() {
         let tips_header_line = padded_line("󰌵 ", &tips_header, max_width);
         println!("│ {} │", tips_header_line);
 
-        for tip in tips {
-            let tip_prefix = "   󰁕 ";
-            let tip_text = format!("{}{}{}", dim, tip, reset);
-
-            // Calculate available space for tip
-            let prefix_width = visible_width(tip_prefix);
-            let tip_content_width = visible_width(&tip);
-            let total_width = prefix_width + tip_content_width;
-
-            let padding = if total_width < max_width {
-                " ".repeat(max_width - total_width)
-            } else {
-                String::new()
-            };
-
-            println!("│ {}{}{} │", tip_prefix, tip_text, padding);
+        for item in tips {
+            for line in tip_lines(max_width, reset, dim, item) {
+                println!("│ {} │", line);
+            }
         }
     }
 
